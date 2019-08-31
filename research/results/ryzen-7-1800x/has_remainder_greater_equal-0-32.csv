@@ -1,0 +1,11 @@
+2019-07-15 08:58:13
+Running ./time_per_divisor
+Run on (16 X 3600 MHz CPU s)
+CPU Caches:
+  L1 Data 32K (x8)
+  L1 Instruction 64K (x8)
+  L2 Unified 512K (x8)
+  L3 Unified 8192K (x2)
+Load Average: 1.13, 1.04, 1.01
+name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
+"Noop",36783,18176.5,18169.9,ns,,,,,
