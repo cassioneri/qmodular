@@ -18,7 +18,7 @@ The first implementation is nothing more than a wrapper around C/C++ built in
 operator `%` and serves as benchmark which others algorithms are compared
 against. Others are subjects of a series of articles ([[1]](#minverse),
 [[2]](#mshift) and [[3]](#new_algo)) which gives a layman idea of how they work.
-Deeper documentation ([[4]](#deep-minverse), [[5]](#deep-minverse), [[6]](#deep-minverse)) provides mathematical proofs of correctness.
+Deeper documentation ([[4]](#deep-minverse), [[5]](#deep-mshift), [[6]](#deep-new_algo)) provides mathematical proofs of correctness.
 
 Although possible, **qmodular** is not meant to be used as a production library.
 Instead, it is mostly a **C++ research framework for performance comparison of
@@ -322,19 +322,18 @@ to appear.
 <br id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
 to appear.
 <br id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)
-<br id="deep-mshifit">[5] *On the Remainder by multiply and right shift*, to appear.
+<br id="deep-mshift">[5] *On the Remainder by multiply and right shift*, to appear.
 <br id="deep-new_algo">[6] *A new algorithm for modular calculations*, to appear.
-
-https://github.com/cassioneri/qmodular/blob/master/papers/minverse.pdf
 
 #### Copyright (C) 2019 Cassio Neri
 
-![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+#### Copyright (C) 2019 Cassio Neri
+
+[![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0)
 Documentation material in this repository is licensed under a
 [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0).
 
-
-![GNU General Public License](https://www.gnu.org/graphics/gplv3-88x31.png)
+[![GNU General Public License](https://www.gnu.org/graphics/gplv3-88x31.png)](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
 Code material in this repository is licensed under the terms of the 
 [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
 as published by the Free Software Foundation, either version 3 of the License,
