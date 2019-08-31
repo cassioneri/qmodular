@@ -321,11 +321,11 @@ to appear.
 to appear.
 <br id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
 to appear.
-<br id="deep-minverse">[4] [*On the modular inverse algorithm*.](qmodular/papers/minverse.pdf)
+<br id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)
 <br id="deep-mshifit">[5] *On the Remainder by multiply and right shift*, to appear.
 <br id="deep-new_algo">[6] *A new algorithm for modular calculations*, to appear.
 
-
+https://github.com/cassioneri/qmodular/blob/master/papers/minverse.pdf
 
 #### Copyright (C) 2019 Cassio Neri
 
