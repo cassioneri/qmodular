@@ -134,15 +134,15 @@ code is organised.
 
 ## References
 
-<br id="minverse">[1] Cassio Neri, *Quick modular calculations - Part I*,
-to appear.
-<br id="mshift">[2] Cassio Neri, *Quick modular calculations - Part II*,
-to appear.
-<br id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
-to appear.
-<br id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)
-<br id="deep-mshift">[5] *On the Remainder by multiply and right shift*, to appear.
-<br id="deep-new_algo">[6] *A new algorithm for modular calculations*, to appear.
+<span id="minverse">[1] Cassio Neri, *Quick modular calculations - Part I*,
+to appear.<br>
+<span id="mshift">[2] Cassio Neri, *Quick modular calculations - Part II*,
+to appear.<br>
+<span id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
+to appear.<br>
+<span id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
+<span id="deep-mshift">[5] *On the Remainder by multiply and right shift*, to appear.<br>
+<span id="deep-new_algo">[6] *A new algorithm for modular calculations*, to appear.<br>
 
 #### Copyright (C) 2019 Cassio Neri
 
