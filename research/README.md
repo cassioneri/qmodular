@@ -1,6 +1,6 @@
 ## Research tools
 
-Directory [research](research) contains useful research tools for inspecting
+Directory [`research`](research) contains useful research tools for inspecting
 algorithms parameters and generated assembly, benchmarking and plotting results,
 etc. This section explains how to build and how to use such tools. (Instructions
 assume the current directory is `research`.)

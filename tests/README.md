@@ -1,6 +1,6 @@
 ## Tests
 
-Directory [tests](tests) contains testing code. The build requires
+Directory [`tests`](tests) contains testing code. The build requires
 [Google Test](https://github.com/google/googletest) to be installed in a folder
 where
 

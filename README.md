@@ -31,7 +31,6 @@ algorithms in their products.
 of my knowledge the algorithm is original but it is possible that it is already
 known and it has a proper name. If I do discover such name, then I will edit to
 use it here. In any case, the algorithm will be properly named later.
-[↩](#NewAlgoName)
 </font>
 
 
@@ -122,11 +121,11 @@ remainder 0, when divided by 7, and 8 has remainder 1.
 
 ## Extra stuff
 
-Directory [research](research) contains useful research tools for inspecting
+Directory [`research`](research) contains useful research tools for inspecting
 algorithms parameters and generated assembly, benchmarking and plotting results,
 etc.
 
-Directory [tests](tests) contains testing code.
+Directory [`tests`](tests) contains testing code.
 
 Finally, document [internals](Internals.md) provides more information on how
 code is organised.
