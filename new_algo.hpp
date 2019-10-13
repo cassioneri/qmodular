@@ -206,20 +206,14 @@ struct algo {
     auto const d = divisor();
 
     auto const is_unique = r >= (uint_t(1) << d.shift);
-    // Do not use 'if constexpr' with __builtin_constant_p:
-    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91158#c0
     if (__builtin_constant_p(is_unique) && is_unique)
       return fractional(n) == d.multiplier * r;
 
     auto const is_zero = r == 0;
-    // Do not use 'if constexpr' with __builtin_constant_p:
-    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91158#c0
     if (__builtin_constant_p(is_zero) && is_zero)
       return has_remainder_less(n, 1);
 
     auto const l_bound = d.multiplier * (r - 1) + 1;
-    // Do not use 'if constexpr' with __builtin_constant_p:
-    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91158#c0
     if (__builtin_constant_p(l_bound)) {
 
       if constexpr (true) {
