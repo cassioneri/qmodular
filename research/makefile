@@ -43,7 +43,7 @@ clean       :
 		time_per_divisor
 
 quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp ../built_in.hpp \
-	../minverse.hpp ../mshift.hpp ../new_algo.hpp measure.hpp time.hpp time.cpp
+	../minverse.hpp ../mshift.hpp ../new_algo.hpp measure.hpp time.cpp
 	cat $^ | \
 	sed '/#pragma once/d; /#include "/d' | \
 	cpp -fpreprocessed -dD -P -E | \
