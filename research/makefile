@@ -24,6 +24,7 @@ CPP_FILES  = $(wildcard *.cpp)
 OBJ_FILES  = $(CPP_FILES:.cpp=.o)
 DEP_FILES  = $(CPP_FILES:.cpp=.d)
 
+DEPFLAGS   = -MT $@ -MMD -MP -MF $*.d
 CPPFLAGS  += -I.. -std=c++17 -Wall -Werror -pedantic
 
 # If -falign-functions=32 is not used we might get very different and unfair
@@ -36,10 +37,6 @@ all         : div inspection.s quick_bench search
 All         : all time time_per_divisor
 
 time time_per_divisor : LDFLAGS += -lbenchmark -pthread
-
-ifneq ($(MAKECMDGOALS),clean)
-include $(DEP_FILES)
-endif
 
 clean       :
 	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time \
@@ -57,8 +54,13 @@ quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp benchmark.hpp \
 	> $@
 	ls -l $@
 
-%.d         : %.cpp
-	$(CPP) $(CPPFLAGS) -MM $^ > $@
+%.o         : %.cpp
+%.o         : %.cpp %.d
+	$(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+$(OBJ_FILES):
+$(DEP_FILES):
+include $(wildcard $(DEP_FILES))
 
 %.s         : %.o
 	objdump -dC --no-show-raw-insn $< | \
@@ -67,5 +69,6 @@ quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp benchmark.hpp \
 	awk 'BEGIN { p=1 } /^0/ { p=0 } p==1 { print $0 } $$1=="retq" { p=1 }' \
 	> $@
 
+%           : %.cpp
 %           : %.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
