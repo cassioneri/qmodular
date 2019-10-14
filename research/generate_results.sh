@@ -27,7 +27,7 @@ function change_value {
 }
  
 function change_size {
-  change_value uint_t uint$1_t
+  change_value uint_t std::uint$1_t
 }
 
 function change_function {

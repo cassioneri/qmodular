@@ -47,9 +47,9 @@ constexpr function f = function::has_remainder;
 // Value of divisor.
 constexpr uint_t d = 14;
 
-// Value of remainder (ignored when f == are_equivalent). It can be either a
-// fixed positive constant or -1. The latter is a special value indicating that
-// n2 is a runtime variable.
+// Value of objective function's 2nd argument (2nd dividend of are_equivalent or
+// remainder of other functions). It can be either a fixed positive constant or
+// -1. The latter is a special value indicating that n2 is a runtime variable.
 constexpr uint_t n2 = 3;
 
 // List of algorithms to be used. (Some are disregarded when their preconditions

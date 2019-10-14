@@ -26,75 +26,63 @@
 
 #include <cstdint>
 
-#include "benchmark.hpp"
 #include "built_in.hpp"
 #include "math.hpp"
 #include "meta.hpp"
 #include "minverse.hpp"
 #include "mshift.hpp"
 #include "new_algo.hpp"
+#include "time.hpp"
 
-namespace qmodular {
+using namespace qmodular;
 
 //------------------------------------------------------------------------------
 // Configuration
 //------------------------------------------------------------------------------
 
-// Type of dividends, divisors and remainders.
-using uint_t = std::uint32_t;
+struct Config {
 
-// The objective function.
-constexpr function f = function::has_remainder;
+  // Type of dividends, divisors and remainders.
+  using uint_t = std::uint32_t;
 
-// Number of data points.
-constexpr std::size_t n_points = 65536;
+  // The objective function.
+  static constexpr function f = function::has_remainder;
 
-// Value of divisor.
-constexpr uint_t d = 14;
+  // List of algorithms to be used.
+  using algos = algo_list<
+    built_in::plain
+    , built_in::distance
+    , minverse::plain
+    , mshift::plain
+    , mshift::promoted
+    , new_algo::plain
+  >;
 
-// The 1st argument (dividend) of f is a random variable uniformly distributed
-// in [0, bound1].
-constexpr uint_t bound1 = 1000000;
+  // Value of divisor.
+  static constexpr uint_t d = 14;
 
-// Value of 2nd argument of f (2nd dividend of are_equivalent or remainder of
-// other functions). It can be either a fixed positive constant or -1. The
-// latter is a special value indicating that n2 is a runtime variable.
-constexpr uint_t n2 = 3;
+  // The objective function is called on n_points data points.
+  static constexpr unsigned n_points = 65536;
 
-// When n2 is a runtime variable, it is a uniformly distributed random variable
-// in [0, bound2].
-constexpr uint_t bound2 = d - 1;
+  // Objective function's 1st argument (dividend) is a random variable uniformly
+  // distributed in [0, bound].
+  static constexpr uint_t bound = 1000000;
 
-// List of algorithms to be used. (Some are disregarded when their preconditions
-// do not hold.)
-using algos = algo_list<
-  built_in::plain
-  , built_in::distance
-  , minverse::plain
-  , mshift::plain
-  , mshift::promoted
-  , new_algo::plain
->;
+  // Objective function's 2nd argument can be either a fixed positive constant
+  // or -1. The latter is a special value indicating the 2nd argument is a
+  // runtime variable.
+  static constexpr uint_t n2 = 3;
 
-//------------------------------------------------------------------------------
-
-} // namespace qmodular
+}; // struct Config
 
 int
 main(int argc, char* argv[]) {
 
-  using namespace qmodular;
-  using namespace qmodular::benchmark;
+  using namespace ::qmodular::measure;
 
-  auto const points = data<uint_t>(n_points, bound1, bound2);
+  TimeRegistrar<typename Config::uint_t> registrar;
 
-  if (!is_quick_bench)
-    register_no_op<uint_t, n2>(points);
-
-  register_algos<uint_t, d, n2, bound1, bound2, f>(algos(), points);
-
-  if (is_quick_bench)
-    register_no_op<uint_t, n2>(points);
+  register_1<Config>(registrar);
 
   ::benchmark::Initialize(&argc, argv);
   ::benchmark::RunSpecifiedBenchmarks();

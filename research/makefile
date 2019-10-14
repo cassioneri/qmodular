@@ -42,15 +42,18 @@ clean       :
 	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time \
 		time_per_divisor
 
-quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp benchmark.hpp \
-	../built_in.hpp ../minverse.hpp ../mshift.hpp ../new_algo.hpp time.cpp
+quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp ../built_in.hpp \
+	../minverse.hpp ../mshift.hpp ../new_algo.hpp measure.hpp time.hpp time.cpp
 	cat $^ | \
 	sed '/#pragma once/d; /#include "/d' | \
 	cpp -fpreprocessed -dD -P -E | \
 	sed 's/^ *//g;' | \
 	sed 's/ *\([-+\*/%{}&|^,?:()]\) */\1/g; s/ *\([-+\*/<!=>]=\) */\1/g' | \
 	sed 's/\bfunction\b/fn/g; s/\bqmodular\b/qm/g; ' | \
-	sed 's/\bdetail\b/dt/g; s/\bmath\b/mt/g; s/ *noexcept *//g;' \
+	sed 's/\bdetail\b/dt/g; s/\bmath\b/mt/g; s/ *noexcept *//g;' | \
+	sed 's/\bhas_remainder_less\b/hrl/g; s/\bhas_remainder_less_equal\b/hrle/g;' | \
+	sed 's/\bhas_remainder_greater\b/hrg/g; s/\bhas_remainder_greater_equal\b/hrge/g;' | \
+	sed 's/\bhare_equivalent\b/eqv/g;' \
 	> $@
 	ls -l $@
 
