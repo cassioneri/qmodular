@@ -34,13 +34,12 @@ CXXFLAGS  += -O3 -falign-functions=32
 
 all         : div inspection.s quick_bench search
 
-All         : all time time_per_divisor
+All         : all time
 
 time        : LDFLAGS += -lbenchmark -pthread
 
 clean       :
-	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time \
-		time_per_divisor
+	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time
 
 quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp ../built_in.hpp \
 	../minverse.hpp ../mshift.hpp ../new_algo.hpp measure.hpp time.cpp

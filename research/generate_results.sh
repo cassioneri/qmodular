@@ -23,7 +23,7 @@
 function change_value {
   local key=$1
   local value=$2
-  sed "s/${key} = .*;$/${key} = ${value};/1" -i time_per_divisor.cpp
+  sed "s/${key} = .*;$/${key} = ${value};/1" -i time
 }
  
 function change_size {
@@ -66,7 +66,7 @@ for size in ${sizes}; do
         change_function ${f}
         change_arg      ${arg}
 
-        rm -rf time_per_divisor
+        rm -rf time
         make time | tee -a ${log_file}
         ./time --benchmark_out=${file} --benchmark_out_format=csv
 
