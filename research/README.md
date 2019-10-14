@@ -70,26 +70,25 @@ Generate `inspection.s` and see the assembly code using
 
 
 
-### `time` : benchmarking
+### `time` : time measurement
 
-The top of `time.cpp` sets up the case we are interested in benchmarking. (See
+The `Config` class at the top of `time.cpp` sets up cases for benchmarking. (See
 instructions therein.) For instance,
 
-    using                 uint_t   = std::uint32_t;
-    constexpr function    f        = function::has_remainder;
-    constexpr std::size_t n_points = 65536;
-    constexpr uint_t      d        = 14;
-    constexpr uint_t      bound1   = 1000000;
-    constexpr uint_t      n2       = 3;
-    using                 algos    = algo_list< /* list of algorithms */ >;
+    uint_t     = std::uint32_t;
+    f          = function::has_remainder;
+    algos      = algo_list< /* list of algorithms */ >;
+    d          = 14;
+    n_divisors = 10;
+    n_points   = 65536;
+    bound      = 1000000;
+    n2         = 3;
 
-is used for benchmarking `((std::uint_32_t) n) % 14 == 3` as implemented by all
-algorithms appearing in `algo_list`. The output will be the time taken to
-evaluate the expression for `65536` values of `n` are uniformly drawn in
-`[0, 1000000]`.
-
-You can either build and run the benchmark locally or use
-[quick-bench.com](http://quick-bench.com).
+is used for benchmarking `n % d == 3` (notice `f` and `n2`), as implemented by
+all algorithms appearing in `algo_list`, where `n` and `d` have type
+`std::uint_32_t` (`uint_t`). The divisor take `10` (`n_divisors`) successive
+integer values start from `14` (`d`) whereas `n` takes `65536` (`n_points`)
+random values uniformly distributed in `[0, 1000000]` (`bound`).
 
 To build locally [Google Benchmark](https://github.com/google/benchmark) is
 expected to be installed in a directory where
@@ -108,44 +107,12 @@ copy-and-pasted into [quick-bench.com](http://quick-bench.com):
     $ make quick_bench
 
 Be aware that [quick-bench.com](http://quick-bench.com) limits the size of input
-at 20000 bytes. The command above also shows the size of `quick_bench` for your
-information.
+to 20000 bytes. The command above also shows the size of `quick_bench` for your
+information. Instructions in the `makefile` try to keep down the file size we
+cannot guarantee that this will not be broken in the future.
 
 It is worth mentioning that, as it is typical in benchmarking, often the OS
 disturbs the measurement and huge spikes in timings might appear.
-
-
-
-### `time_per_divisor` : comprehensive benchmarking
-
-The program covered in previous section benchmarks only one divisor. Similar
-similar results can be obtained for several divisors in one go by
-`time_per_divisor`. However, this must be done locally and, again,
-[Google Benchmark](https://github.com/google/benchmark) is expected to be
-installed where the compiler and linker can find it.
-
-Similarly to `time.cpp`, the top of `time_per_divisor.cpp` sets up the cases
-we are interested in, notably the range of divisors:
-
-    constexpr uint_t first = 1;
-    constexpr uint_t last  = 1000;
-
-For each divisor a few template functions are instantiated and, consequently,
-compilation time increases with the range. For instance, for range [1, 1000] it
-typically takes between 1 and 2 minutes. In addition, if the range is large
-enough, compiler limits are reached and compilation fails.
-
-Build with
-
-    $ make time_per_divisor
-
-Run `time_per_divisor` to generate the results. Any command line option of
-[Google Benchmark](https://github.com/google/benchmark) can be used. (See their
-official documentation for more info.) For instance,
-
-    ./time_per_divisor --benchmark_out_format=csv --benchmark_out=results.csv
-
-generates `results.csv` as well as outputs on the screen.
 
 
 
@@ -159,7 +126,9 @@ This script loops through all combinations of
 * remainder (or 2nd dividend for `are_equivalent`): `0`, `1` and variable.
 
 For each combination the script compiles, runs and saves the results of
-`time_per_divisor`. The full run takes several hours (a day or so) to complete.
+`time`. The full run (for `n_points = 65536` and `n_divisors = 1000`) takes
+several hours (a day or so) to complete. This have been done and results were
+saved in the `research/results` directory. (See next section.)
 
 
 

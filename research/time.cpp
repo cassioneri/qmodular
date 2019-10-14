@@ -58,8 +58,11 @@ struct Config {
     , new_algo::plain
   >;
 
-  // Value of divisor.
+  // Each divisor in a range of integers starting from d is considered.
   static constexpr uint_t d = 14;
+
+  // The number of n_divisors in the range.
+  static constexpr uint_t n_divisors = 1000;
 
   // The objective function is called on n_points data points.
   static constexpr unsigned n_points = 65536;

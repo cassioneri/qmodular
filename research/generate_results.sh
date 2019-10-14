@@ -67,8 +67,8 @@ for size in ${sizes}; do
         change_arg      ${arg}
 
         rm -rf time_per_divisor
-        make time_per_divisor | tee -a ${log_file}
-        ./time_per_divisor --benchmark_out=${file} --benchmark_out_format=csv
+        make time | tee -a ${log_file}
+        ./time --benchmark_out=${file} --benchmark_out_format=csv
 
       fi
     done

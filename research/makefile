@@ -36,7 +36,7 @@ all         : div inspection.s quick_bench search
 
 All         : all time time_per_divisor
 
-time time_per_divisor : LDFLAGS += -lbenchmark -pthread
+time        : LDFLAGS += -lbenchmark -pthread
 
 clean       :
 	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time \
