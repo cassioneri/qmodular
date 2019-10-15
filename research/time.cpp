@@ -27,14 +27,12 @@
  * [1] https://github.com/google/benchmark
  */
 
-#ifdef BENCHMARK // benchmark.h has been included, supposedly by quick-bench.
-  constexpr auto is_quick_bench = true;
-#else
-  #include <benchmark/benchmark.h>
-  constexpr auto is_quick_bench = false;
-#endif
-
 #include <cstdint>
+#include <deque>
+#include <string>
+#include <random>
+#include <vector>
+
 #include "built_in.hpp"
 #include "math.hpp"
 #include "meta.hpp"
@@ -50,7 +48,7 @@ using namespace qmodular::measure;
 // Configuration
 //------------------------------------------------------------------------------
 
-struct Config {
+struct config {
 
   // Type of dividends, divisors and remainders.
   using uint_t = std::uint32_t;
@@ -72,7 +70,7 @@ struct Config {
   static constexpr uint_t d = 14;
 
   // The number of n_divisors in the range (not used by quick-bench)
-  static constexpr uint_t n_divisors = 1000;
+  static constexpr uint_t n_divisors = 1;
 
   // The objective function is called on n_points data points.
   static constexpr unsigned n_points = 65536;
@@ -86,7 +84,16 @@ struct Config {
   // runtime variable.
   static constexpr uint_t n2 = 3;
 
-}; // struct Config
+}; // struct config
+
+//------------------------------------------------------------------------------
+
+#ifdef BENCHMARK // benchmark.h has been included, supposedly by quick-bench.
+  constexpr auto is_quick_bench = true;
+#else
+  #include <benchmark/benchmark.h>
+  constexpr auto is_quick_bench = false;
+#endif
 
 // Prevents quick-bench from duplicating of main.
 #undef  BENCHMARK_MAIN
@@ -96,31 +103,110 @@ struct Config {
 #undef  BENCHMARK
 #define BENCHMARK(x)
 
-template <class U>
+/**
+ * @brief Container of benchmark data.
+ *
+ * Each data point is a pair of arguments (n1, n2) that is passed to the
+ * function being benchmarked.
+ */
+struct data {
+
+  struct args_t {
+    config::uint_t n1;
+    config::uint_t n2;
+  };
+
+  /**
+   * Default constructor.
+   *
+   * @post this->empty() == true.
+   */
+  data() = default;
+
+  /**
+   * @brief Constructor.
+   *
+   * @param size    Number of data points.
+   * @param bounds  1st argument is uniformly drawn in [0, bounds.n1] and
+   *                2nd argument is uniformly drawn in [0, bounds.n2].
+   */
+  data(unsigned size, args_t bounds) noexcept {
+
+    data_.resize(size);
+
+    std::mt19937 rng;
+    rng.seed(std::random_device()());
+
+    std::uniform_int_distribution<config::uint_t> d1(0, bounds.n1);
+    std::uniform_int_distribution<config::uint_t> d2(0, bounds.n2);
+
+    for (std::size_t i = 0; i < size; ++i) {
+      data_[i].n1 = d1(rng);
+      data_[i].n2 = d2(rng);
+    }
+  }
+
+  /**
+   * @brief Accesses the i-th data point.
+   *
+   * @param i     Index.
+   */
+  const args_t& operator [](std::size_t i) const noexcept {
+    return data_[i];
+  }
+
+  /**
+   * @brief Checks whether the data set is empty.
+   */
+  bool empty() const noexcept {
+    return data_.empty();
+  }
+
+private:
+
+  std::vector<args_t> data_;
+
+}; // struct data
+
+/**
+ * Registers algorithms for benchmarking, constructing the data points to be
+ * used in the benchmarking.
+ */
 class TimeRegistrar {
 
 public:
 
-  template <U n2, U d, class A>
-  void book(const char* name, data<U> const& points) noexcept {
-    ::benchmark::RegisterBenchmark(name, &run<n2, d, A>, points);
+  using uint_t = config::uint_t;
+
+  /**
+   * Registers an algorithm implementing config::f provided preconditions are
+   * certain to hold for every data point used during the benchmarking.
+   */
+  template <uint_t d, template <class> class A>
+  void book() noexcept {
+
+    using          algo = callable<A<uint_t>, config::f>;
+    auto constexpr a    = algo(d);
+
+    auto constexpr bound2 = config::f == function::are_equivalent ?
+        config::bound : d - 1;
+
+    if (config::bound <= a.max_1st() && bound2 <= a.max_2nd()) {
+      add_data(d, bound2);
+      auto const label = algo_name<A> + ('<' + std::to_string(d) + '>');
+      ::benchmark::RegisterBenchmark(label.c_str(), &run<d, algo>, &data_[d]);
+    }
   }
 
   /**
-   * @brief Registers no_op for time measurement. Useful to asses the
-   * measurement overhead.
-   *
-   * @tparam n2       If n2 != -1 then it is used as the 2nd argument passed to
-   *                  the measured function. Otherwise, the 2nd argument is
-   *                  taken from points.
-   * @param  points   Contains the array of values used as 1st and (possibly)
-   *                  2nd arguments (when they are variable) of the measured
-   *                  function.
+   * @brief Registers no_op for time measurement. )Useful to asses the
+   * measurement overhead.)
    */
-  template <U n2>
   void
-  book_no_op(data<U> const& points) {
-    book<n2, 1, no_op<U>>(algo_name<no_op>, points);
+  book_no_op() {
+    add_data(1, config::bound);
+    ::benchmark::RegisterBenchmark(algo_name<no_op>, &run<1, no_op<uint_t>>,
+        &data_[1]);
   }
 
 private:
@@ -134,9 +220,6 @@ private:
    * precisely, when * n2 != -1 this value is used* as the 2nd argument.
    * Otherwise, it is taken from points.
    *
-   * @tparam n2       If n2 != -1 then it is used as the 2nd argument passed to
-   *                  the measured function. Otherwise, the 2nd argument is
-   *                  taken from points.
    * @tparam d        Divisor.
    * @tparam A        Type of callable object that is measured.
    * @param  s        The benchmark state. (See Google's benchmark for more
@@ -145,7 +228,7 @@ private:
    *                  2nd arguments (when they are variable) of the measured
    *                  function.
    */
-  template <U n2, U d, class A>
+  template <uint_t d, class A>
   static void
   // For fairer results, we need to turn "move-loop-invariants" optimisation
   // off. Indeed, some functions profiled here contain a multiplication. To
@@ -157,13 +240,12 @@ private:
   // below. This would completely remove the cost of the load from the
   // measurement.
   __attribute__((optimize("-fno-move-loop-invariants")))
-  run(::benchmark::State& s, data<U> const& points) {
+  run(::benchmark::State& s, data const* points) {
 
     auto constexpr a = A(d);
-    auto const     n = points.size();
 
     for (auto _ : s) {
-      for (std::size_t i = 0; i < n; ++i) {
+      for (unsigned i = 0; i < config::n_points; ++i) {
 
         // Variable point must not be const otherwise it might be optimised away
         // defeating the purpose of DoNotOptimize which we do need here. Indeed,
@@ -172,13 +254,13 @@ private:
         // instructions inside this loop that differ from one algorithm to
         // another will be exclusively those in the algorithms themselves and
         //  not from the scaffolding around measurements.
-        auto point = points[i];
+        auto point = (*points)[i];
         ::benchmark::DoNotOptimize(point);
 
         if constexpr(!std::is_same_v<void, decltype(a(point.n1, point.n2))>) {
-          if constexpr (n2 != U(-1)) {
+          if constexpr (config::n2 != uint_t(-1)) {
             // Same comment as above.
-            auto x = a(point.n1, n2);
+            auto x = a(point.n1, config::n2);
             ::benchmark::DoNotOptimize(x);
           }
           else {
@@ -190,17 +272,27 @@ private:
       }
     }
   }
+
+  void add_data(uint_t d, uint_t bound2) {
+    if (data_.size() < d + 1)
+      data_.resize(d + 1);
+    if (data_[d].empty())
+      data_[d] = data(config::n_points, { config::bound, bound2 });
+  }
+
+  std::deque<data> data_;
+
 }; // class TimeRegistrar
 
 int
 main(int argc, char* argv[]) {
 
-  TimeRegistrar<typename Config::uint_t> registrar;
+  TimeRegistrar registrar;
 
   if constexpr (is_quick_bench)
-    register_1<Config>(registrar);
+    register_1<config>(registrar);
   else
-    register_n<Config>(registrar);
+    register_n<config>(registrar);
 
   ::benchmark::Initialize(&argc, argv);
   ::benchmark::RunSpecifiedBenchmarks();

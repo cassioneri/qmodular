@@ -23,7 +23,7 @@
 function change_value {
   local key=$1
   local value=$2
-  sed "s/${key} = .*;$/${key} = ${value};/1" -i time
+  sed "s/${key} = .*;$/${key} = ${value};/1" -i time.cpp
 }
  
 function change_size {
@@ -45,6 +45,8 @@ sizes="32 64"
 functions="has_remainder has_remainder_less has_remainder_less_equal
   has_remainder_greater has_remainder_greater_equal are_equivalent"
 args="0 1 -1"
+
+change_value n_divisors 1000
 
 for size in ${sizes}; do
   for f in ${functions}; do
