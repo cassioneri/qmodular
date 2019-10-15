@@ -71,6 +71,5 @@ include $(wildcard $(DEP_FILES))
 	awk 'BEGIN { p=1 } /^0/ { p=0 } p==1 { print $0 } $$1=="retq" { p=1 }' \
 	> $@
 
-%           : %.cpp
 %           : %.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)

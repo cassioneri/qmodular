@@ -24,30 +24,30 @@ CPP_FILES  = $(wildcard *.cpp)
 OBJ_FILES  = $(CPP_FILES:.cpp=.o)
 DEP_FILES  = $(CPP_FILES:.cpp=.d)
 
+DEPFLAGS   = -MT $@ -MMD -MP -MF $*.d
 CPPFLAGS  += -I.. -std=c++17 -Wall -Werror -pedantic
-CXXFLAGS  += -O3 -falign-functions=32
 
-ifeq ($(MAKECMDGOALS),debug)
-	CXXFLAGS += -g
-endif
+# If -falign-functions=32 is not used we might get very different and unfair
+# time measurements.
+# https://easyperf.net/blog/2018/01/18/Code_alignment_issues
+CXXFLAGS  += -O3 -falign-functions=32
 
 all         : test
 
 All         : all
 
-debug       : all
-
 test        : LDFLAGS += -lgtest
 
-ifneq ($(MAKECMDGOALS),clean)
-include $(DEP_FILES)
-endif
+%.o         : %.cpp
+%.o         : %.cpp %.d
+	$(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+$(OBJ_FILES):
+$(DEP_FILES):
+include $(wildcard $(DEP_FILES))
 
 clean       :
 	rm -f $(OBJ_FILES) $(DEP_FILES) test
 
 test        : $(OBJ_FILES)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-
-%.d         : %.cpp
-	$(CPP) $(CPPFLAGS) -MM $^ > $@
