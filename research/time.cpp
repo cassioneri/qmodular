@@ -289,11 +289,14 @@ main(int argc, char* argv[]) {
 
   TimeRegistrar registrar;
 
-  if constexpr (is_quick_bench)
+  if constexpr (is_quick_bench) {
     register_1<config>(registrar);
-  else
+    registrar.book_no_op();
+  }
+  else {
+    registrar.book_no_op();
     register_n<config>(registrar);
-
+  }
   ::benchmark::Initialize(&argc, argv);
   ::benchmark::RunSpecifiedBenchmarks();
 }

@@ -140,10 +140,6 @@ register_algos(R& registrar) noexcept {
     register_algos<C, d + 500, n - 500>(registrar);
   }
   else if constexpr (n > 0) {
-
-    if constexpr (d == C::d)
-      registrar.template book_no_op();
-
     register_algos<C, d>(registrar);
     register_algos<C, d + 1, n - 1>(registrar);
   }
