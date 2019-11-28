@@ -32,6 +32,8 @@ CPPFLAGS  += -I.. -std=c++17 -Wall -Werror -pedantic
 # https://easyperf.net/blog/2018/01/18/Code_alignment_issues
 CXXFLAGS  += -O3 -falign-functions=32
 
+LDFLAGS   += -lgtest
+
 all         : test
 
 All         : all
