@@ -21,7 +21,7 @@
 /**
  * @file tests/mshift.hpp
  *
- * @brief Tests of remainder by multiply and shift algorithm.
+ * @brief Tests of multiply and shift algorithm.
  */
 
 #include <gtest/gtest.h>

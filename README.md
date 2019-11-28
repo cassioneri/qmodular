@@ -11,7 +11,7 @@ More precisely, the algorithms are:
 
 * Built in (denoted *built_in*);
 * Modular inverse (*minverse*);
-* Remainder by multiply and right shift (*mshift*); and
+* Multiply and shift (*mshift*); and
 * New algorithm<sup id="NewAlgoName">[1](#fNewAlgoName)</sup> (*new_algo*).
 
 The first implementation is nothing more than a wrapper around C/C++ built in
@@ -141,8 +141,8 @@ to appear.<br>
 <span id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
 to appear.<br>
 <span id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
-<span id="deep-mshift">[5] *On the Remainder by multiply and right shift*, to appear.<br>
-<span id="deep-new_algo">[6] *A new algorithm for modular calculations*, to appear.<br>
+<span id="deep-mshift">[5] *On the multiply and shift algorithm for modular calculations*, to appear.<br>
+<span id="deep-new_algo">[6] *On a new algorithm for modular calculations*, to appear.<br>
 
 #### Copyright (C) 2019 Cassio Neri
 

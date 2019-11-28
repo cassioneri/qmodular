@@ -21,9 +21,9 @@
 /**
  * @file mshift.hpp
  *
- * @brief Modular expressions using remainder by multiply and shift algorithm.
+ * @brief Modular expressions using multiply and shift algorithm.
  *
- * Essentially, these are the algorithms presented in [Warren] section 10-20.
+ * Essentially, this is the algorithms presented in [Warren] section 10-20.
  * However, the implementation here do not compute remainders but stop when
  * there is enough information for remainder comparison.
  *
@@ -131,7 +131,7 @@ print(P& p, divisor<U> d) {
 }
 
 /**
- * @brief Implementation of the remainder by multiply and right shift algorithm.
+ * @brief Implementation of the multiply and shift algorithm.
  *
  * @tparam U    Divisor's value type.
  * @pre         std::is_unsigned_v<U>
