@@ -214,50 +214,8 @@ struct algo {
       return has_remainder_less(n, 1);
 
     auto const l_bound = d.multiplier * (r - 1) + 1;
-    if (__builtin_constant_p(l_bound)) {
-
-      if constexpr (true) {
-        bool res;
-        // clang 8.0.0 does not support output flags ("=@ccb").
-        // clang trunk (as of 13-Jul-2019) does.
-        asm("cmp\t{%[m], %[n]|%[n], %[m]}" : "=@ccb"(res) :
-          [n]"r"(fractional(n) - l_bound), [m]"re"(d.multiplier) : "cc");
-        return res;
-      }
-      else {
-
-        // Issues with this full C++ implementation:
-
-        // 1) (uint_t, d) = (std::uint64_t, 19)
-        //
-        // Generally, immediate values are at most 32 bits long and they are
-        // signed extended when used as 64 bits operands. Therefore, 64 bits
-        // constants (e.g., d.multiplier) that are not signed extended 32 bits
-        // immediate values, must be loaded ('movabs') into a register to be
-        // used as operands. This load needs an extra register and increases
-        // code size by 10 bytes.
-        //
-        // Assume d.multiplier constant. In this case, it is a 64 bits constant
-        // that cannot be obtained from a signed extended 32 bits immediate
-        // value). Hence, d.multiplier must be loaded into register for the
-        // comparison below. It turns out that, this load has already been
-        // performed for using in the 'mul' instruction done by fractional(n).
-        // Unfortunately, GCC 8.2 changes the comparison below to
-        //     fractional(n) - l_bound <= d.multiplier - 1.
-        // Hence a new constant, d.multiplier - 1, is introduced and this
-        // requires a new load which costs an extra register and adds 10 bytes
-        // of code.
-        //
-        // AFAIK, the rationale for GCC's behaviour is exactly mitigating the
-        // issue that immediate values can only be 32 bits. Indeed, by giving
-        // preference to constants closer to zero, GCC makes more likely that
-        // they fit in 32 bits and can be signed extended to 64 bits. In this
-        // case GCC changed from d.multiplier to d.multiplier - 1 but because
-        // the larger constant was already in a register, GCC ended up shooting
-        // itself in the foot.
-        return fractional(n) - l_bound < d.multiplier;
-      }
-    }
+    if (__builtin_constant_p(l_bound))
+      return math::less(fractional(n) - l_bound, d.multiplier);
 
     bool c;
     // clang 8.0.0 does not support output flags ("=@ccnc").

@@ -38,6 +38,23 @@ template <class U>
 constexpr U max = ~U(0);
 
 /**
+ * @brief Returns n < m. (Assembly implementation.)
+ *
+ * Reason for this function: https://stackoverflow.com/q/59117603/1137388
+ *
+ * @tparam U    The type of n and m.
+ * @param  n    1st number.
+ * @param  m    2nd number.
+ */
+template <class U>
+bool less(U n, U m) noexcept {
+  bool r;
+  asm("cmp\t{%[m], %[n]|%[n], %[m]}"
+    : "=@ccb"(r) : [n]"r"(n), [m]"re"(m) : "cc");
+  return r;
+}
+
+/**
  * @brief The number of 1-bits of a given number.
  *
  * @tparam U    The type of the given number.
