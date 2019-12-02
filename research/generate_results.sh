@@ -23,7 +23,7 @@
 function change_value {
   local key=$1
   local value=$2
-  sed "s/${key} = .*;$/${key} = ${value};/1" -i time.cpp
+  sed "0,/${key} = .*;$/ s//${key} = ${value};/" -i time.cpp
 }
  
 function change_size {
