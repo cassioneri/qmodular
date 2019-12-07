@@ -65,12 +65,11 @@ template <class C, typename C::uint_t d, class R, template <class> class A,
 void
 register_algos(R& registrar, algo_list<A, As...>) {
 
-  if constexpr (does_implement<A<typename C::uint_t>, C::f>) {
+  if constexpr (does_implement<A<typename C::uint_t>, C::f>)
     registrar.template book<d, A>();
 
-    if constexpr (sizeof...(As) > 0)
-      detail::register_algos<C, d>(registrar, algo_list<As...>());
-  }
+  if constexpr (sizeof...(As) > 0)
+    detail::register_algos<C, d>(registrar, algo_list<As...>());
 }
 
 /**
@@ -107,8 +106,7 @@ register_algos(R& registrar) {
     (f == function::has_remainder_less          && n2 >= 1 && n2 <= d - 1) ||
     (f == function::has_remainder_less_equal    && n2 >= 0 && n2 <= d - 2) ||
     (f == function::has_remainder_greater       && n2 >= 0 && n2 <= d - 2) ||
-    (f == function::has_remainder_greater_equal && n2 >= 1 && n2 <= d - 1) ||
-    f == function::are_equivalent;
+    (f == function::has_remainder_greater_equal && n2 >= 1 && n2 <= d - 1);
 
   if constexpr (valid)
     detail::register_algos<C, d>(registrar, typename C::algos());
