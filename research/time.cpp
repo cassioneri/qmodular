@@ -247,25 +247,32 @@ private:
     for (auto _ : s) {
       for (unsigned i = 0; i < config::n_points; ++i) {
 
-        // Variable point must not be const otherwise it might be optimised away
+        auto address = &(*points)[i];
+        __builtin_prefetch(address);
+        auto point = *address;
+        ::benchmark::DoNotOptimize(point);
+
+        // Variable n1 must not be const otherwise it might be optimised away
         // defeating the purpose of DoNotOptimize which we do need here. Indeed,
         // we want all measurements to consider the cost of loading points from
         // memory even those that are not going to be used. In that way, the
         // instructions inside this loop that differ from one algorithm to
         // another will be exclusively those in the algorithms themselves and
         //  not from the scaffolding around measurements.
-        auto point = (*points)[i];
-        ::benchmark::DoNotOptimize(point);
+        auto n1 = point.n1;
+        ::benchmark::DoNotOptimize(n1);
 
-        if constexpr(!std::is_same_v<void, decltype(a(point.n1, point.n2))>) {
-          if constexpr (config::n2 != uint_t(-1)) {
-            // Same comment as above.
-            auto x = a(point.n1, config::n2);
+        if constexpr (config::n2 != uint_t(-1)) {
+          if constexpr(!std::is_same_v<void, decltype(a(n1, config::n2))>) {
+            auto x = a(n1, config::n2);
             ::benchmark::DoNotOptimize(x);
           }
-          else {
-            // Same comment as above.
-            auto x = a(point.n1, point.n2);
+        }
+        else {
+          auto n2 = point.n2;
+          //::benchmark::DoNotOptimize(n2);
+          if constexpr(!std::is_same_v<void, decltype(a(n1, n2))>) {
+            auto x = a(n1, n2);
             ::benchmark::DoNotOptimize(x);
           }
         }
