@@ -47,11 +47,19 @@ constexpr U max = ~U(0);
  * @param  m    2nd number.
  */
 template <class U>
-bool less(U n, U m) noexcept {
-  bool r;
-  asm("cmp\t{%[m], %[n]|%[n], %[m]}"
-    : "=@ccb"(r) : [n]"r"(n), [m]"re"(m) : "cc");
-  return r;
+constexpr bool
+less(U n, U m) noexcept {
+
+  auto const r = n < m;
+  if (__builtin_constant_p(r))
+    return r;
+
+  return [&] {
+    bool r;
+    asm("cmp\t{%[m], %[n]|%[n], %[m]}"
+      : "=@ccb"(r) : [n]"r"(n), [m]"re"(m) : "cc");
+    return r;
+  }();
 }
 
 /**
@@ -293,9 +301,14 @@ modular_inverse(U n) noexcept {
  * @pre         std::is_unsigned_v<U>
  */
 template <class U>
-U
+constexpr U
 abs_diff(U n, U m) noexcept {
-  if constexpr (true) {
+
+  auto const r = n >= m ? n - m : m - n;
+  if (__builtin_constant_p(r))
+    return r;
+
+  return [&] {
     asm(
       "sub\t{%[m], %[n]|%[n], %[m]}\n\t"
       "sbb\t{%[m], %[m]|%[m], %[m]}\n\t"
@@ -303,22 +316,7 @@ abs_diff(U n, U m) noexcept {
       "sub\t{%[m], %[n]|%[n], %[m]}"
       : [n]"+r"(n), [m]"+r"(m) : : "cc");
     return n;
-  }
-  else {
-    // The generated code for this full C++ implementation is:
-    //
-    // movq    %rdi, %rdx
-    // movq    %rsi, %rax
-    // subq    %rsi, %rdx
-    // subq    %rdi, %rax
-    // cmpq    %rsi, %rdi
-    // cmovnb  %rdx, %rax
-    // ret
-    //
-    // It needs 4 registers (instead of 2) and is 4 bytes longer than the
-    // assembly above (https://godbolt.org/z/hzZfX9).
-    return n >= m ? n - m : m - n;
-  }
+  }();
 }
 
 } // namespace qmodular::math
