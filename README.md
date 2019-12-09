@@ -135,15 +135,17 @@ code is organised.
 
 ## References
 
-<span id="minverse">[1] Cassio Neri, *Quick Modular Calculations (Part 1)*,
+<span id="overload-1">[1] Cassio Neri, *Quick Modular Calculations (Part 1)*,
 to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
-<span id="mshift">[2] Cassio Neri, *Quick Modular calculations (Part 2)*,
+<span id="overload-2">[2] Cassio Neri, *Quick Modular calculations (Part 2)*,
 to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
-<span id="new_algo">[3] Cassio Neri, *Quick Modular calculations (Part 3)*,
+<span id="overload-3">[3] Cassio Neri, *Quick Modular calculations (Part 3)*,
 to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
-<span id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
-<span id="deep-mshift">[5] *On the multiply and shift algorithm for modular calculations*, to appear.<br>
-<span id="deep-new_algo">[6] *On a new algorithm for modular calculations*, to appear.<br>
+<span id="deep-1">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
+<span id="deep-2">[5] *On the multiply and shift algorithm for modular calculations*, to appear.<br>
+<span id="deep-3">[6] *On a new algorithm for modular calculations*, to appear.<br>
+
+
 
 #### Copyright (C) 2019 Cassio Neri
 
