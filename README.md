@@ -11,14 +11,15 @@ More precisely, the algorithms are:
 
 * Built in (denoted *built_in*);
 * Modular inverse (*minverse*);
-* Multiply and shift (*mshift*); and
+* Multiply and shift (*mshift*);
+* Multiply and compare (*mcomp*); and
 * New algorithm<sup id="NewAlgoName">[1](#fNewAlgoName)</sup> (*new_algo*).
 
 The first implementation is nothing more than a wrapper around C/C++ built in
 operator `%` and serves as benchmark which others algorithms are compared
-against. Others are subjects of a series of articles ([[1]](#minverse),
-[[2]](#mshift) and [[3]](#new_algo)) which gives a layman idea of how they work.
-Deeper documentation ([[4]](#deep-minverse), [[5]](#deep-mshift), [[6]](#deep-new_algo)) provides mathematical proofs of correctness.
+against. Others are subjects of a series of articles ([[1]](#overload-1),
+[[2]](#overload-2) and [[3]](#overload-3)) which gives a layman idea of how they work.
+Deeper documentation ([[4]](#deep-1), [[5]](#deep-2), [[6]](#deep-3)) provides mathematical proofs of correctness.
 
 Although possible, **qmodular** is not meant to be used as a production library.
 Instead, it is mostly a **C++ research framework for performance comparison of
@@ -134,12 +135,12 @@ code is organised.
 
 ## References
 
-<span id="minverse">[1] Cassio Neri, *Quick modular calculations - Part I*,
-to appear.<br>
-<span id="mshift">[2] Cassio Neri, *Quick modular calculations - Part II*,
-to appear.<br>
-<span id="new_algo">[3] Cassio Neri, *Quick modular calculations - Part III*,
-to appear.<br>
+<span id="minverse">[1] Cassio Neri, *Quick Modular Calculations (Part 1)*,
+to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
+<span id="mshift">[2] Cassio Neri, *Quick Modular calculations (Part 2)*,
+to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
+<span id="new_algo">[3] Cassio Neri, *Quick Modular calculations (Part 3)*,
+to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
 <span id="deep-minverse">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
 <span id="deep-mshift">[5] *On the multiply and shift algorithm for modular calculations*, to appear.<br>
 <span id="deep-new_algo">[6] *On a new algorithm for modular calculations*, to appear.<br>
