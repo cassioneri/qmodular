@@ -166,27 +166,33 @@ set key noenhanced left top opaque horizontal
 
 qm_index(algo) = \
   algo eq "built_in"          ? 1 : algo eq "built_in_distance" ? 2 : \
-  algo eq "minverse"          ? 3 : algo eq "mshift"            ? 4 : \
-  algo eq "mshift_promoted"   ? 5 : algo eq "new_algo"          ? 6 : 0
+  algo eq "minverse"          ? 3 :                                   \
+  algo eq "mshift"            ? 4 : algo eq "mshift_promoted"   ? 5 : \
+  algo eq "mcomp"             ? 6 : algo eq "mcomp_promoted"    ? 7 : \
+  algo eq "new_algo"          ? 8 : 0
 
 qm_style = "linespoints"
-do for [i=1:6] { set linetype i linewidth 2 pointsize 1.5 pointtype 7 }
-
-set linetype 1 linecolor rgb "#000000" pointtype 2
+do for [i=1:8] { set linetype i linewidth 2 pointsize 1.5 pointtype 7 }
 
 if (${use_colours}) {
-  set linetype 2 linecolor rgb "red"        pointtype 2
-  set linetype 3 linecolor rgb "dark-green" pointtype 7
-  set linetype 4 linecolor rgb "dark-blue"  pointtype 5
-  set linetype 5 linecolor rgb "orange"     pointtype 2
-  set linetype 6 linecolor rgb "purple"     pointtype 7
+  set linetype qm_index("built_in")          linecolor rgb "black"      pointtype 2
+  set linetype qm_index("built_in_distance") linecolor rgb "black"      pointtype 3
+  set linetype qm_index("minverse")          linecolor rgb "red"        pointtype 7
+  set linetype qm_index("mcomp")             linecolor rgb "dark-green" pointtype 2
+  set linetype qm_index("mcomp_promoted")    linecolor rgb "dark-green" pointtype 3
+  set linetype qm_index("mshift")            linecolor rgb "orange"     pointtype 2
+  set linetype qm_index("mshift_promoted")   linecolor rgb "orange"     pointtype 3
+  set linetype qm_index("new_algo")          linecolor rgb "purple"     pointtype 2
 }
 else {
-  set linetype 2 linecolor rgb "#000000" pointtype 2
-  set linetype 3 linecolor rgb "#303030" pointtype 7
-  set linetype 4 linecolor rgb "#606060" pointtype 5
-  set linetype 5 linecolor rgb "#909090" pointtype 2
-  set linetype 6 linecolor rgb "#c0c0c0" pointtype 7
+  set linetype qm_index("built_in")          linecolor rgb "#000000" pointtype 2
+  set linetype qm_index("built_in_distance") linecolor rgb "#000000" pointtype 3
+  set linetype qm_index("minverse")          linecolor rgb "#303030" pointtype 7
+  set linetype qm_index("mcomp")             linecolor rgb "#606060" pointtype 2
+  set linetype qm_index("mcomp_promoted")    linecolor rgb "#606060" pointtype 3
+  set linetype qm_index("mshift")            linecolor rgb "#909090" pointtype 2
+  set linetype qm_index("mshift_promoted")   linecolor rgb "#909090" pointtype 3
+  set linetype qm_index("new_algo")          linecolor rgb "#c0c0c0" pointtype 2
 }
 
 #-------------------------------------------------------------------------------

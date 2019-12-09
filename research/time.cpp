@@ -35,6 +35,7 @@
 
 #include "built_in.hpp"
 #include "math.hpp"
+#include "mcomp.hpp"
 #include "meta.hpp"
 #include "measure.hpp"
 #include "minverse.hpp"
@@ -63,6 +64,8 @@ struct config {
     , minverse::plain
     , mshift::plain
     , mshift::promoted
+    , mcomp::plain
+    , mcomp::promoted
     , new_algo::plain
   >;
 
@@ -172,9 +175,7 @@ private:
  * Registers algorithms for benchmarking, constructing the data points to be
  * used in the benchmarking.
  */
-class TimeRegistrar {
-
-public:
+struct TimeRegistrar {
 
   using uint_t = config::uint_t;
 

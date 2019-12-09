@@ -41,18 +41,24 @@ time        : LDFLAGS += -lbenchmark -pthread
 clean       :
 	rm -f $(OBJ_FILES) $(DEP_FILES) div inspection.s quick_bench search time
 
-quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp ../built_in.hpp \
-	../minverse.hpp ../mshift.hpp ../new_algo.hpp measure.hpp time.cpp
+quick_bench : ../meta.hpp ../math.hpp ../adaptors.hpp \
+	../built_in.hpp ../mcomp.hpp ../minverse.hpp ../new_algo.hpp ../mshift.hpp \
+	measure.hpp time.cpp
 	cat $^ | \
 	sed '/#pragma once/d; /#include "/d' | \
 	cpp -fpreprocessed -dD -P -E | \
 	sed 's/^ *//g;' | \
-	sed 's/ *\([-+\*/%{}&|^,?:()]\) */\1/g; s/ *\([-+\*/<!=>]=\) */\1/g' | \
-	sed 's/\bfunction\b/fn/g; s/\bqmodular\b/qm/g; ' | \
-	sed 's/\bdetail\b/dt/g; s/\bmath\b/mt/g; s/ *noexcept *//g;' | \
-	sed 's/\bhas_remainder_less\b/hrl/g; s/\bhas_remainder_less_equal\b/hrle/g;' | \
-	sed 's/\bhas_remainder_greater\b/hrg/g; s/\bhas_remainder_greater_equal\b/hrge/g;' | \
-	sed 's/\bhare_equivalent\b/eqv/g;' \
+	sed 's/\bqmodular\b/q/g; s/adaptors/a/g; s/\bdetail\b/d/g; s/\bmath\b/m/g;' | \
+	sed 's/\buint_t\b/ut/g; s/divisor_t/dt/g; s/\bfunction\b/ft/g' | \
+	sed 's/\bdivisor\b/dv/g; s/\bmax_dividend\b/md/g; s/\bmax_remainder\b/mr/g' | \
+	sed 's/\bare_equivalent\b/r0/g; s/\bhas_remainder\b/r1/g' | \
+	sed 's/\bhas_remainder_less\b/r2/g; s/\bhas_remainder_less_equal\b/r3/g;' | \
+	sed 's/\bhas_remainder_greater\b/r4/g; s/\bhas_remainder_greater_equal\b/r5/g;' | \
+	sed 's/remainder/r/g; s/multiplier/m/g; s/quotient/q/g' | \
+	sed 's/ *\bexplicit\b *//g; s/ *\bnoexcept\b *//g; /private:/d' | \
+	sed 's/ *\([-+\*/%{}&|^,?:()]\) */\1/g; s/ *\([-+\*/!=]=\) */\1/g' | \
+	sed 's/ *\([<>]\{1,2\}=\) */\1/g' | \
+	sed 's/\([^>]\) *= */\1=/g; s/ *\([<>]\) *\([^=]\)/\1\2/g' \
 	> $@
 	ls -l $@
 

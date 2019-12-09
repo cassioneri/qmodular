@@ -27,6 +27,7 @@
 #include <cstdint>
 
 #include "built_in.hpp"
+#include "mcomp.hpp"
 #include "meta.hpp"
 #include "minverse.hpp"
 #include "mshift.hpp"
@@ -60,6 +61,8 @@ using algos = algo_list<
   , minverse::plain
   , mshift::plain
   , mshift::promoted
+  , mcomp::plain
+  , mcomp::promoted
   , new_algo::plain
 >;
 

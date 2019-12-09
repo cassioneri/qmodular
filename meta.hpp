@@ -113,8 +113,6 @@ struct callable : A {
       return this->has_remainder_greater_equal(n, m);
     else if constexpr (f == function::are_equivalent)
       return this->are_equivalent(n, m);
-    else
-      static_assert(((void) f, false), "Invalid function.");
     return false;
   }
 };

@@ -35,6 +35,7 @@
 #include <string>
 
 #include "built_in.hpp"
+#include "mcomp.hpp"
 #include "meta.hpp"
 #include "minverse.hpp"
 #include "mshift.hpp"
@@ -178,6 +179,9 @@ print(const char* prog, const std::string& algo, U d, bool is_csv,
 
   if (algo == "mshift")
     return print<mshift::plain  >(d, is_csv, add_header);
+
+  if (algo == "mcomp")
+    return print<mcomp::plain   >(d, is_csv, add_header);
 
   if (algo == "new_algo")
     return print<new_algo::plain>(d, is_csv, add_header);
