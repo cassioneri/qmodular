@@ -27,10 +27,7 @@ DEP_FILES  = $(CPP_FILES:.cpp=.d)
 DEPFLAGS   = -MT $@ -MMD -MP -MF $*.d
 CPPFLAGS  += -I.. -std=c++17 -Wall -Werror -pedantic
 
-# If -falign-functions=32 is not used we might get very different and unfair
-# time measurements.
-# https://easyperf.net/blog/2018/01/18/Code_alignment_issues
-CXXFLAGS  += -O3 -falign-functions=32
+CXXFLAGS  += -O3
 
 all         : div inspection.s quick_bench search
 

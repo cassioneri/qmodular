@@ -232,15 +232,18 @@ private:
   template <uint_t d, class A>
   static void
   // For fairer results, we need to turn "move-loop-invariants" optimisation
-  // off. Indeed, some functions profiled here contain a multiplication. To
-  // perform the calculation, the generated assembly loads either one or both
+  // off. Indeed, functions profiled here contain a multiplication. To perform
+  // the calculation, the generated assembly loads either one or both
   // multiplicands into registers and, since this load is part of the algorithm,
   // we want the measurement to take this cost into account. However, one of the
   // multiplicands is a loop invariant since it only depends on the divisor. In
   // full optimisation mode the compiler moves the load out of the two loops
   // below. This would completely remove the cost of the load from the
   // measurement.
-  __attribute__((optimize("-fno-move-loop-invariants")))
+  //
+  // We also need to align functions to 32 bytes to get fairer results.
+  // https://easyperf.net/blog/2018/01/18/Code_alignment_issues
+  __attribute__((optimize("-fno-move-loop-invariants"), aligned(32)))
   run(::benchmark::State& s, data const* points) {
 
     auto constexpr a = A(d);
