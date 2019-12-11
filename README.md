@@ -136,7 +136,7 @@ code is organised.
 ## References
 
 <span id="overload-1">[1] Cassio Neri, *Quick Modular Calculations (Part 1)*,
-to appear in [Overload 154](https://accu.org/index.php/journals), pages 11-15, December 2019.<br>
+[Overload 154](https://accu.org/var/uploads/journals/Overload154.pdf), pages 11-15, December 2019.<br>
 <span id="overload-2">[2] Cassio Neri, *Quick Modular calculations (Part 2)*,
 to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
 <span id="overload-3">[3] Cassio Neri, *Quick Modular calculations (Part 3)*,
