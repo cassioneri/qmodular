@@ -69,12 +69,20 @@ struct divisor {
       if (p == math::n_bits<uint_t>)
         return uint_t(0);
 
-      auto const a = math::max<uint_t> / (d - math::remainder_sup_divided_by(d));
-      if (a < d - 1)
+      auto const n   = math::max<uint_t> /
+          (d - math::remainder_sup_divided_by(d));
+      auto const dm1 = d - 1;
+
+      if (n < dm1)
         return uint_t(0);
 
-      auto const b = a == d - 1 ? a : a - a % d - 1;
-      return b >> p;
+      if (n % d == dm1) {
+        // Overflow-less way to get (n + d - 1) >> p
+        auto const two_to_p = uint_t(1) << p;
+        return n / two_to_p + dm1 / two_to_p +
+            (n % two_to_p + dm1 % two_to_p) / two_to_p;
+      }
+      return (n - (n % d) - 1) >> p;
     }();
 
     return divisor(value, multiplier, shift, max_dividend);
