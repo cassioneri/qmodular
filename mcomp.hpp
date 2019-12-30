@@ -67,6 +67,10 @@ struct divisor {
    */
   static constexpr divisor
   create(uint_t d) noexcept {
+
+    if (d == 1)
+      return divisor(1, 0, 1, math::max<uint_t>);
+
     auto const value        = d;
     auto const multiplier   = math::ceil_sup_divided_by(d);
     auto const extra        = multiplier * d;
