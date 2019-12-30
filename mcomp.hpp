@@ -23,9 +23,17 @@
  *
  * @brief Modular expressions using multiply and compare algorithm.
  *
- * Essentially, this is the algorithms presented in [Warren] section 10-20.
- * However, the implementation here do not compute remainders but stop when
+ * A simplified version of this algorithm has recently appeared in [Lemire]. The
+ * main difference is that [Lemire] only considers n % d == r for r = 0, whereas
+ * here 0 <= r < d.
+ *
+ * Essentially, this is the algorithm presented in [Warren] section 10-20.
+ * However, the implementation here does not compute remainders but stop when
  * there is enough information for remainder comparison.
+ *
+ * [Lemire] Lemire, D., Kaser, O., Kurz, N., "Faster Remainder by Direct
+ * Computation: Applications to Compilers and Software Libraries.",
+ * Software: Practice and Experience 49 (6), 2019.
  *
  * [Warren] Warren, H.S., "Hacker's delight." Addison-Wesley, 2013.
  */
@@ -59,13 +67,12 @@ struct divisor {
    */
   static constexpr divisor
   create(uint_t d) noexcept {
-    auto const value         = d;
-    auto const is_power_of_2 = math::is_power_of_2(d);
-    auto const multiplier    = math::ceil_sup_divided_by(d);
-    auto const extra         = is_power_of_2 ? 1 : multiplier * d;
-    auto const max_dividend  = is_power_of_2 ? math::max<uint_t> :
-        math::floor_sup_divided_by(d * extra) * d + d - 2;
-    return divisor(value, multiplier, extra, max_dividend);
+    auto const value        = d;
+    auto const multiplier   = math::ceil_sup_divided_by(d);
+    auto const extra        = multiplier * d;
+    auto const bound        = extra < multiplier ? multiplier - extra : 0;
+    auto const max_dividend = extra < multiplier ? (bound / d) * d + d - 1 : 0;
+    return divisor(value, multiplier, bound, max_dividend);
   }
 
   /**
@@ -79,7 +86,7 @@ struct divisor {
 
   uint_t const value;
   uint_t const multiplier;
-  uint_t const extra;
+  uint_t const bound;
   uint_t const max_dividend;
 
 private:
@@ -91,11 +98,11 @@ private:
    * @pre       d > 0
    */
   constexpr
-  divisor(uint_t value, uint_t multiplier, uint_t extra, uint_t max_dividend)
+  divisor(uint_t value, uint_t multiplier, uint_t bound, uint_t max_dividend)
     noexcept :
     value       (value       ),
     multiplier  (multiplier  ),
-    extra       (extra       ),
+    bound       (bound       ),
     max_dividend(max_dividend) {
   }
 }; // struct divisor
@@ -113,7 +120,7 @@ void
 print(P& p, divisor<U> d) {
   p("value"       , d.value       )
    ("multiplier"  , d.multiplier  )
-   ("extra"       , d.extra       )
+   ("bound"       , d.bound       )
    ("max_dividend", d.max_dividend)
   ;
 }
@@ -170,12 +177,11 @@ struct algo {
 
     if (__builtin_constant_p(is_r_max)) {
       if (is_r_max)
-        return !math::less(d.multiplier * n, d.multiplier * (d - 1));
-      return math::less(d.multiplier * (n - r), d.multiplier);
+        return d.multiplier * n >= d.multiplier * (d - 1);
+      return d.multiplier * (n - r) < d.multiplier;
     }
 
-    return math::less(d.multiplier * (n - r),
-      d.multiplier - (is_r_max ? d.extra : 0));
+    return d.multiplier * (n - r) < d.bound;
   }
 
   /**
