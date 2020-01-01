@@ -36,16 +36,18 @@ function show_usage() {
   echo "                               but with .png extension"
   echo "  -r, --relative[=BASELINE]  plot relative (rather than absolut) results with respect to"
   echo "                                BASELINE algorithm (default is 'built_in')"
+  echo "  -y, --range=MIN:MAX        set y-axis to [MIN, MAX]"
   exit 0
 }
 
-set -- $(getopt --unquoted --options "cfho::r::" \
-  --longoptions "colour,filter,help,out::,relative::" --name ${program} -- "$@")
+set -- $(getopt --unquoted --options "cfho::r::y::" \
+  --longoptions "colour,filter,help,out::,relative::,range::" --name ${program} -- "$@")
 
 relative=0
 use_colours=0
 to_file=0
 filter="1"
+range=""
 
 while true; do
     case "$1" in
@@ -71,6 +73,10 @@ while true; do
           baseline=$2
           shift
         fi
+        ;;
+      -y|--range)
+        range="[$2]"
+        shift
         ;;
       --)
         shift
@@ -155,6 +161,10 @@ if (${relative}) {
     set ytics  0.2
     set mytics 2
     set yrange [0:1.5]
+}
+
+if ("${range}" ne "") {
+    set yrange ${range}
 }
 
 set grid xtics mxtics lt 1 lc rgb "gray90" lw 1, lt 1 lc rgb "gray90" lw 1
