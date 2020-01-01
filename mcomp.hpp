@@ -181,11 +181,11 @@ struct algo {
 
     if (__builtin_constant_p(is_r_max)) {
       if (is_r_max)
-        return d.multiplier * n >= d.multiplier * (d - 1);
-      return d.multiplier * (n - r) < d.multiplier;
+        return !math::less(d.multiplier * n, d.multiplier * (d - 1));
+      return math::less(d.multiplier * (n - r), d.multiplier);
     }
 
-    return d.multiplier * (n - r) < d.bound;
+    return math::less(d.multiplier * (n - r), d.bound);
   }
 
   /**
@@ -197,7 +197,7 @@ struct algo {
   constexpr bool
   has_remainder_less(uint_t n, uint_t r) const noexcept {
     auto const d = divisor();
-    return d.multiplier * n < d.multiplier * r;
+    return math::less(d.multiplier * n, d.multiplier * r);
   }
 
 private:
