@@ -195,7 +195,7 @@ struct TimeRegistrar {
     if (config::bound <= a.max_1st() && bound2 <= a.max_2nd()) {
       add_data(d, bound2);
       auto const label = algo_name<A> + ('<' + std::to_string(d) + '>');
-      ::benchmark::RegisterBenchmark(label.c_str(), &run<d, algo>, &data_[d]);
+      ::benchmark::RegisterBenchmark(label.c_str(), &run<d, algo>, data_[d]);
     }
   }
 
@@ -207,7 +207,7 @@ struct TimeRegistrar {
   book_no_op() {
     add_data(1, config::bound);
     ::benchmark::RegisterBenchmark(algo_name<no_op>, &run<1, no_op<uint_t>>,
-        &data_[1]);
+        data_[1]);
   }
 
 private:
@@ -241,46 +241,60 @@ private:
   // below. This would completely remove the cost of the load from the
   // measurement.
   //
-  // We also need to align functions to 32 bytes to get fairer results.
+  // We also need to align loops to 32 bytes to get fairer results.
   // https://easyperf.net/blog/2018/01/18/Code_alignment_issues
-  __attribute__((optimize("-fno-move-loop-invariants"), aligned(32)))
-  run(::benchmark::State& s, data const* points) {
+  __attribute__((optimize("-fno-move-loop-invariants,-falign-loops=32")))
+  run(::benchmark::State& s, data const& points) {
 
     auto constexpr a = A(d);
 
     for (auto _ : s) {
-      for (unsigned i = 0; i < config::n_points; ++i) {
 
-        auto address = &(*points)[i];
-        __builtin_prefetch(address);
-        auto point = *address;
-        ::benchmark::DoNotOptimize(point);
+      // Unfortunately, option "-falign-loops=32" does not work for gcc 8 and
+      // earlier. (https://godbolt.org/z/Kcdgpu) Hence, instead of using a
+      // simple for-loop we have to manually create one using a goto and
+      // manually align the code using inline asm.
 
-        // Variable n1 must not be const otherwise it might be optimised away
-        // defeating the purpose of DoNotOptimize which we do need here. Indeed,
-        // we want all measurements to consider the cost of loading points from
-        // memory even those that are not going to be used. In that way, the
-        // instructions inside this loop that differ from one algorithm to
-        // another will be exclusively those in the algorithms themselves and
-        //  not from the scaffolding around measurements.
-        auto n1 = point.n1;
-        ::benchmark::DoNotOptimize(n1);
+      if (config::n_points == 0)
+        continue;
 
-        if constexpr (config::n2 != uint_t(-1)) {
-          if constexpr(!std::is_same_v<void, decltype(a(n1, config::n2))>) {
-            auto x = a(n1, config::n2);
-            ::benchmark::DoNotOptimize(x);
-          }
-        }
-        else {
-          auto n2 = point.n2;
-          //::benchmark::DoNotOptimize(n2);
-          if constexpr(!std::is_same_v<void, decltype(a(n1, n2))>) {
-            auto x = a(n1, n2);
-            ::benchmark::DoNotOptimize(x);
-          }
+      auto       begin = &points[0];
+      auto const end   = begin + config::n_points;
+      asm volatile (".p2align 5" : : "g"(end) : "memory");
+
+      main_loop:
+
+      __builtin_prefetch(begin);
+      auto point = *begin;
+      ::benchmark::DoNotOptimize(point);
+
+      // Variable n1 must not be const otherwise it might be optimised away
+      // defeating the purpose of DoNotOptimize which we do need here. Indeed,
+      // we want all measurements to consider the cost of loading points from
+      // memory even those that are not going to be used. In that way, the
+      // instructions inside this loop that differ from one algorithm to
+      // another will be exclusively those in the algorithms themselves and
+      //  not from the scaffolding around measurements.
+      auto n1 = point.n1;
+      ::benchmark::DoNotOptimize(n1);
+
+      if constexpr (config::n2 != uint_t(-1)) {
+        if constexpr(!std::is_same_v<void, decltype(a(n1, config::n2))>) {
+          auto x = a(n1, config::n2);
+          ::benchmark::DoNotOptimize(x);
         }
       }
+      else {
+        auto n2 = point.n2;
+        //::benchmark::DoNotOptimize(n2);
+        if constexpr(!std::is_same_v<void, decltype(a(n1, n2))>) {
+          auto x = a(n1, n2);
+          ::benchmark::DoNotOptimize(x);
+        }
+      }
+
+      if (++begin != end)
+        goto main_loop;
     }
   }
 
