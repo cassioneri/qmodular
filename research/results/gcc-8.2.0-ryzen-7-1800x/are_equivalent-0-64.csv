@@ -1,4 +1,4 @@
-2019-12-09 12:35:43
+2020-01-16 16:52:25
 Running ./time
 Run on (16 X 3600 MHz CPU s)
 CPU Caches:
@@ -8,4 +8,4 @@ CPU Caches:
   L3 Unified 8192K (x2)
 Load Average: 1.00, 1.00, 1.00
 name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
-"Noop",18061,38089.8,38075.6,ns,,,,,
+"Noop",26178,25444.2,25434.6,ns,,,,,
