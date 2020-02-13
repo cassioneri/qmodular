@@ -28,7 +28,7 @@ modular arithmetic algorithms**. Hopefully, compiler writers will use
 algorithms in their products.
 
 <font size="-1">
-<b id="fNewAlgoName"><sup>1</sup></b> This name is a place holder. At the best
+<b id="fNewAlgoName"><sup>1</sup></b> This name is a place holder. To the best
 of my knowledge the algorithm is original but it is possible that it is already
 known and it has a proper name. If I do discover such name, then I will edit to
 use it here. In any case, the algorithm will be properly named later.
@@ -136,18 +136,18 @@ code is organised.
 ## References
 
 <span id="overload-1">[1] Cassio Neri, *Quick Modular Calculations (Part 1)*,
-[Overload 154](https://accu.org/var/uploads/journals/Overload154.pdf), pages 11-15, December 2019.<br>
-<span id="overload-2">[2] Cassio Neri, *Quick Modular calculations (Part 2)*,
-to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
-<span id="overload-3">[3] Cassio Neri, *Quick Modular calculations (Part 3)*,
+[Overload 154](https://accu.org/var/uploads/journals/Overload154.pdf#page=13), pages 11-15, December 2019.<br>
+<span id="overload-2">[2] Cassio Neri, *Quick Modular Calculations (Part 2)*,
+[Overload 155](https://accu.org/var/uploads/journals/Overload155.pdf#page=16), pages 14-17, January 2020.<br>
+<span id="overload-3">[3] Cassio Neri, *Quick Modular Calculations (Part 3)*,
 to appear in [Overload](https://accu.org/index.php/journals/c78/).<br>
 <span id="deep-1">[4] [*On the modular inverse algorithm*.](papers/minverse.pdf)<br>
-<span id="deep-2">[5] *On the multiply and shift algorithm for modular calculations*, to appear.<br>
+<span id="deep-2">[5] *On the multiply and shift and multiply and compare algorithms*, to appear.<br>
 <span id="deep-3">[6] *On a new algorithm for modular calculations*, to appear.<br>
 
 
 
-#### Copyright (C) 2019 Cassio Neri
+#### Copyright (C) 2019-2020 Cassio Neri
 
 [![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0)
 Documentation material in this repository is licensed under a
