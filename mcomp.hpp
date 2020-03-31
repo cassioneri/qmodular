@@ -75,7 +75,8 @@ struct divisor {
     auto const multiplier   = math::ceil_sup_divided_by(d);
     auto const extra        = multiplier * d;
     auto const bound        = extra < multiplier ? multiplier - extra : 0;
-    auto const max_dividend = extra < multiplier ? (bound / d) * d + d - 1 : 0;
+    auto const max_dividend = extra == 0 ? math::max<uint_t> :
+      extra < multiplier ? (bound - 1) / extra * d + d - 1 : 0;
     return divisor(value, multiplier, bound, max_dividend);
   }
 
